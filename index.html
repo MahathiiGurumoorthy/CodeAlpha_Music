@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Music Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background: #1e1e1e;
+            padding: 10px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        .player {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+            width: 350px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        .controls button {
+            margin: 10px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 50%;
+            background-color: #007bff;
+            color: white;
+            width: 50px;
+            height: 50px;
+        }
+        .controls button:hover {
+            background-color: #0056b3;
+        }
+        #progress {
+            width: 100%;
+            height: 5px;
+            background: #333;
+            margin-top: 10px;
+            border-radius: 5px;
+            position: relative;
+        }
+        #progress-bar {
+            height: 5px;
+            background: #007bff;
+            width: 0%;
+            position: absolute;
+            border-radius: 5px;
+        }
+        #volume {
+            margin-top: 10px;
+            width: 100%;
+        }
+        .song-list {
+            margin-top: 20px;
+        }
+        .song-list button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #444;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .song-list button:hover {
+            background: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#">Home</a>
+        <a href="#playlist">Playlist</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    
+    <h1>Interactive Music Player</h1>
+    <div class="player">
+        <h3 id="song-title">Now Playing: Song Name</h3>
+        <audio id="audio" src="your-song.mp3"></audio>
+        <div class="controls">
+            <button onclick="prevSong()">⏮</button>
+            <button onclick="playMusic()">▶</button>
+            <button onclick="pauseMusic()">⏸</button>
+            <button onclick="stopMusic()">⏹</button>
+            <button onclick="nextSong()">⏭</button>
+        </div>
+        <div id="progress">
+            <div id="progress-bar"></div>
+        </div>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="setVolume(this.value)">
+        <div class="song-list" id="playlist">
+            <button onclick="loadSong(0)">Song 1</button>
+            <button onclick="loadSong(1)">Song 2</button>
+            <button onclick="loadSong(2)">Song 3</button>
+        </div>
+    </div>
+    
+    <section id="about">
+        <h2>About This Player</h2>
+        <p>This interactive music player allows you to play, pause, and switch between songs. You can also adjust the volume and track progress.</p>
+    </section>
+    
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <p>Email: musicplayer@example.com</p>
+        <p>Phone: 123-456-7890</p>
+    </section>
+
+    <script>
+        const audio = document.getElementById("audio");
+        const progressBar = document.getElementById("progress-bar");
+        const songTitle = document.getElementById("song-title");
+        
+        const songs = [
+            { title: "Song 1", src: "bring-me-back-283196.mp3" },
+            { title: "Song 2", src: "song-english-edm-296526.mp3"},
+            { title: "Song 3", src:  "english-poem-108554.mp3"}
+        ];
+        
+        let currentSongIndex = 0;
+        
+        function playMusic() {
+            audio.play();
+        }
+        function pauseMusic() {
+            audio.pause();
+        }
+        function stopMusic() {
+            audio.pause();
+            audio.currentTime = 0;
+        }
+        function setVolume(value) {
+            audio.volume = value;
+        }
+        
+        function loadSong(index) {
+            currentSongIndex = index;
+            audio.src = songs[index].src;
+            songTitle.innerText = "Now Playing: " + songs[index].title;
+            playMusic();
+        }
+        
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            loadSong(currentSongIndex);
+        }
+        
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            loadSong(currentSongIndex);
+        }
+        
+        audio.addEventListener("timeupdate", () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = progress + "%";
+        });
+    </script>
+</body>
+</html>
